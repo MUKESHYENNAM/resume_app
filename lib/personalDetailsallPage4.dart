@@ -106,8 +106,7 @@ class _personalAllDetailsState extends State<personalAllDetails> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => PersonalInfo()));
+                            print("DONE");
                           },
                         ),
                         decoration: BoxDecoration(
