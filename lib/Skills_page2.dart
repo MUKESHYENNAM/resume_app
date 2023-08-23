@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_project/Comm/genTextFormField.dart';
+import 'package:flutter_login_project/pojo.dart';
+import 'package:provider/provider.dart';
 import 'educationPage3.dart';
 import 'personalInfo.dart';
 
@@ -17,6 +19,7 @@ class _SkillsDataState extends State<SkillsData> {
   final _currentlyWorking = TextEditingController();
   final _skills = TextEditingController();
   final _hobbies = TextEditingController();
+  final _courses = TextEditingController();
 
   @override
   void initState() {
@@ -73,6 +76,7 @@ class _SkillsDataState extends State<SkillsData> {
                   SizedBox(height: 10.0),
                   getTextFormField(
                     name: "Courses",
+                    controller: _courses,
                     hintName: 'Enter Courses',
                     icon: Icons.account_tree_outlined,
                   ),
@@ -105,8 +109,30 @@ class _SkillsDataState extends State<SkillsData> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => EducationDetails()));
+                            if (!_formKey.currentState!.validate()) {
+                              return null;
+                            } else {
+
+                              // Store the data in the provider
+                              PersonalInfoProvider personalInfoProvider =
+                              Provider.of<PersonalInfoProvider>(context, listen: false);
+
+                              PersonalInformation personalInfo = personalInfoProvider.personalInfo;
+
+                              print('Name: ${personalInfo.name}');
+                              print('Email: ${personalInfo.email}');
+                              personalInfo = personalInfo.copyWith(
+                                progLanguage: _progLanguage.text,
+                                currentlyWorking: _currentlyWorking.text,
+                                skills: _skills.text,
+                                hobbies: _hobbies.text,
+                                courses: _courses.text,
+                              );
+                              personalInfoProvider.updatePersonalInfo(personalInfo);
+
+                              // Navigate to the next page
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => EducationDetails()));
+                            }
                           },
                         ),
                         decoration: BoxDecoration(
@@ -125,44 +151,8 @@ class _SkillsDataState extends State<SkillsData> {
       ),
     );
   }
-  showAlertDialog(BuildContext context, String msg) {
-    AlertDialog alert = AlertDialog(
-      title: Text("Here's a message"),
-      content: Text("${msg}"),
-      actions: [
-        CupertinoDialogAction(child: Text("OK"), onPressed: () {
-          Navigator.of(context).pop();
-        },)
 
-      ],
-    );
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-}
-RegistrationDone(BuildContext context, String msg) {
-  AlertDialog alert = AlertDialog(
-    title: Text("Here's a message"),
-    content: Text("${msg}"),
-    actions: [
-
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
 }
 
 

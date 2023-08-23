@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_project/modelclass.dart';
+import 'package:flutter_login_project/pojo.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'Comm/Textheader.dart';
 import 'Comm/genTextFormField.dart';
 import 'Skills_page2.dart';
+import 'modelData.dart';
 
 class PersonalInfo extends StatefulWidget {
+
   @override
   _PersonalInfoState createState() => _PersonalInfoState();
 }
@@ -13,17 +18,17 @@ class PersonalInfo extends StatefulWidget {
 class _PersonalInfoState extends State<PersonalInfo> {
   final _formKey = new GlobalKey<FormState>();
 
-  final _firstName = TextEditingController();
+  final _CondidateName = TextEditingController();
   final _regEmail = TextEditingController();
   final _address = TextEditingController();
   final _MobileNo = TextEditingController();
-
+  final _linkedInUrl = TextEditingController();
+  final _yourSelf = TextEditingController();
   @override
   void initState() {
     super.initState();
+
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +49,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                   Text("Parsonal Info"),
                   getTextFormField(
                     name: "Enter Your Name",
-                       controller: _firstName,
+                       controller: _CondidateName,
                       icon: Icons.person,
                       hintName: 'first_Name'),
                   SizedBox(height: 10.0),
@@ -73,11 +78,13 @@ class _PersonalInfoState extends State<PersonalInfo> {
                   getTextFormField(
                     name: "Your LinkedIn Url",
                     hintName: 'Enter here',
+                    controller: _linkedInUrl,
                     icon: Icons.account_tree_outlined,
                   ),
                   SizedBox(height: 10.0),
                   getTextFormField(
                     name: "Describe yourself",
+                    controller: _yourSelf,
                     hintName: 'Start here',
                   ),
                   Row(
@@ -107,8 +114,41 @@ class _PersonalInfoState extends State<PersonalInfo> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => SkillsData()));
+                            if (!_formKey.currentState!.validate()) {
+                              return null;
+                            } else {
+                              // Store the data in the provider
+                              PersonalInformation personalInfo = PersonalInformation(
+                                name: _CondidateName.text,
+                                email: _regEmail.text,
+                                address: _address.text,
+                                mobileNo: _MobileNo.text,
+                                linkedInUrl: _linkedInUrl.text,
+                                yourSelf: _yourSelf.text,
+
+                                progLanguage: '', // Default value for programming language
+                                currentlyWorking: '', // Default value for currently working
+                                skills: '', // Default value for skills
+                                hobbies: '', // Default value for hobbies
+                                courses: '', // Default value for courses
+
+                                degree: '',
+                                schoolOrCollege: '',
+                                percentage: '',
+                                roleTraining: '',
+                                companyTraining: '',
+
+                                gender: '',
+                                nationality: '',
+                                dob: '',
+                                languages: '',
+                                maritalStatus: '',
+                              );
+                              Provider.of<PersonalInfoProvider>(context, listen: false)
+                                  .updatePersonalInfo(personalInfo);
+
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => SkillsData()));
+                            }
                           },
                         ),
                         decoration: BoxDecoration(
@@ -127,45 +167,44 @@ class _PersonalInfoState extends State<PersonalInfo> {
       ),
     );
   }
-  showAlertDialog(BuildContext context, String msg) {
-    AlertDialog alert = AlertDialog(
-      title: Text("Here's a message"),
-      content: Text("${msg}"),
-      actions: [
-        CupertinoDialogAction(child: Text("OK"), onPressed: () {
-          Navigator.of(context).pop();
-        },)
+}
 
-      ],
-    );
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
+
+
+
+
+class PersonalInfoProvider extends ChangeNotifier {
+  PersonalInformation _personalInfo = PersonalInformation(
+    name: '',
+    email: '',
+    address: '',
+    mobileNo: '',
+    linkedInUrl: '',
+    yourSelf: '',
+
+    progLanguage: '', // Default value for programming language
+    currentlyWorking: '', // Default value for currently working
+    skills: '', // Default value for skills
+    hobbies: '', // Default value for hobbies
+    courses: '',
+
+    companyTraining: '',
+    percentage: '',
+    schoolOrCollege: '',
+    gender: '',
+    roleTraining: '',
+    maritalStatus: '',
+    dob: '',
+    degree: '',
+    nationality: '',
+    languages: '',
+  );
+
+  PersonalInformation get personalInfo => _personalInfo;
+
+  void updatePersonalInfo(PersonalInformation newInfo) {
+    _personalInfo = newInfo;
+    notifyListeners();
   }
-
 }
-RegistrationDone(BuildContext context, String msg) {
-  AlertDialog alert = AlertDialog(
-    title: Text("Here's a message"),
-    content: Text("${msg}"),
-    actions: [
-
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
-
-

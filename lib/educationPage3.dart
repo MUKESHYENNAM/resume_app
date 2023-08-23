@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_project/Comm/genTextFormField.dart';
 import 'package:flutter_login_project/personalDetailsallPage4.dart';
+import 'package:flutter_login_project/pojo.dart';
+import 'package:provider/provider.dart';
 import 'personalInfo.dart';
 
 
@@ -107,10 +109,27 @@ class _EducationDetailsState extends State<EducationDetails> {
                             'Next',
                             style: TextStyle(color: Colors.white),
                           ),
+
                           onPressed: () {
-                            print("caling");
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => personalAllDetails()));
+                            if (!_formKey.currentState!.validate()) {
+                              return null;
+                            } else {
+                              // Store the data in the provider
+                              PersonalInfoProvider personalInfoProvider =
+                              Provider.of<PersonalInfoProvider>(context, listen: false);
+                              PersonalInformation personalInfo = personalInfoProvider.personalInfo;
+                              personalInfo = personalInfo.copyWith(
+                                  degree: _Degree.text,
+                                  schoolOrCollege: _schoolandCollegs.text,
+                                  percentage: _percentage.text,
+                                  roleTraining: _roleTraining.text,
+                                  companyTraining: _CompnayTraining.text,
+                              );
+                              personalInfoProvider.updatePersonalInfo(personalInfo);
+
+                              // Navigate to the next page
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => personalAllDetails()));
+                            }
                           },
                         ),
                         decoration: BoxDecoration(
@@ -129,27 +148,6 @@ class _EducationDetailsState extends State<EducationDetails> {
       ),
     );
   }
-  showAlertDialog(BuildContext context, String msg) {
-    AlertDialog alert = AlertDialog(
-      title: Text("Here's a message"),
-      content: Text("${msg}"),
-      actions: [
-        CupertinoDialogAction(child: Text("OK"), onPressed: () {
-          Navigator.of(context).pop();
-        },)
-
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
 }
 
 
