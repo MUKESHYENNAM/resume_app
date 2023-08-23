@@ -23,16 +23,31 @@ class FetchedDataPage extends StatelessWidget {
               itemCount: fetchedData.length,
               itemBuilder: (context, index) {
                 final data = fetchedData[index];
-                return ListTile(
-                  title: Text(data.name),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SelectedResumePage(selectedResume: data),
-                      ),
-                    );
-                  },
+                // Choose a background color based on the index
+                Color bgColor = index % 2 == 0 ? Colors.black26 : Colors.black12;
+                return Container(
+                  decoration: BoxDecoration(
+                    color: bgColor,
+                    borderRadius: BorderRadius.circular(10.0), // Adding rounded corners
+                  ),
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Text("Name: ${data.name}"),
+                        SizedBox(width: 10,),
+                        Text("Role: ${data.roleTraining}"),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => SelectedResumePage(selectedResume: data),
+                        ),
+                      );
+                    },
+                  ),
                 );
               },
             ),
