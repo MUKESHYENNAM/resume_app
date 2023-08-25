@@ -47,12 +47,6 @@ class getTextFormField extends StatelessWidget {
                 print(value.length);
                   return (value.length<=25) ?"Enter minimun 25 latters":null;
               }
-              // if (hintName == "BusinessName") {
-              //   return (value.length<10) ?"Enter minimun 10 Charcters":"";
-              // }
-              // if (hintName == "BusinessName") {
-              //   return (value.length<10) ?"Enter minimun 10 latters":"";
-              // }
               if (hintName == "LandlineNo" || hintName == "MobileNo") {
                 String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
                 RegExp regExp = new RegExp(patttern);

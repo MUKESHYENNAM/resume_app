@@ -4,10 +4,15 @@ import 'package:flutter_login_project/Comm/genTextFormField.dart';
 import 'package:flutter_login_project/personalDetailsallPage4.dart';
 import 'package:flutter_login_project/pojo.dart';
 import 'package:provider/provider.dart';
+import 'Comm/Textheader.dart';
+import 'modelData.dart';
 import 'personalInfo.dart';
 
 
 class EducationDetails extends StatefulWidget {
+  final DatabaseModel? editingResume;
+  final bool? status;
+  EducationDetails({ this.status, this.editingResume});
   @override
   _EducationDetailsState createState() => _EducationDetailsState();
 }
@@ -24,6 +29,11 @@ class _EducationDetailsState extends State<EducationDetails> {
   @override
   void initState() {
     super.initState();
+    _Degree.text = widget.editingResume?.degree ?? '';
+    _schoolandCollegs.text = widget.editingResume?.schoolOrCollege ?? '';
+    _percentage.text = widget.editingResume?.percentage ?? '';
+    _roleTraining.text = widget.editingResume?.roleTraining ?? '';
+    _CompnayTraining.text = widget.editingResume?.companyTraining ?? '';
   }
 
 
@@ -63,14 +73,14 @@ class _EducationDetailsState extends State<EducationDetails> {
                       name: "Percentage / CGPA",
                       controller: _percentage,
                       icon: Icons.home,
-                      inputType: TextInputType.emailAddress,
+                      inputType: TextInputType.number,
                       hintName: 'Enter Percentage or CGPA'),
                   SizedBox(height: 10.0),
                   Text("Training/Intership"),
                   getTextFormField(
                     name: "Role",
                     controller: _roleTraining,
-                    inputType: TextInputType.number,
+                    inputType: TextInputType.text,
                     icon: Icons.phone_android,
                     hintName: 'Enter Role',
                   ),
@@ -85,24 +95,7 @@ class _EducationDetailsState extends State<EducationDetails> {
 
                   Row(
                     children: [
-                      Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: FlatButton(
-                          child: Text(
-                            'Back',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => PersonalInfo()));
-                          },
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                      Container(
+                      Expanded(child: Container(
                         margin: EdgeInsets.all(10.0),
                         child: FlatButton(
                           child: Text(
@@ -119,16 +112,19 @@ class _EducationDetailsState extends State<EducationDetails> {
                               Provider.of<PersonalInfoProvider>(context, listen: false);
                               PersonalInformation personalInfo = personalInfoProvider.personalInfo;
                               personalInfo = personalInfo.copyWith(
-                                  degree: _Degree.text,
-                                  schoolOrCollege: _schoolandCollegs.text,
-                                  percentage: _percentage.text,
-                                  roleTraining: _roleTraining.text,
-                                  companyTraining: _CompnayTraining.text,
+                                degree: _Degree.text,
+                                schoolOrCollege: _schoolandCollegs.text,
+                                percentage: _percentage.text,
+                                roleTraining: _roleTraining.text,
+                                companyTraining: _CompnayTraining.text,
                               );
                               personalInfoProvider.updatePersonalInfo(personalInfo);
 
-                              // Navigate to the next page
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => personalAllDetails()));
+                              if(widget.status==true){
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => personalAllDetails(editingResume: widget.editingResume, status: true,)));
+                              }else{
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => personalAllDetails()));
+                              }
                             }
                           },
                         ),
@@ -136,7 +132,7 @@ class _EducationDetailsState extends State<EducationDetails> {
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                      ),
+                      ),)
                     ],
                   ),
 

@@ -23,3 +23,34 @@ class textHeader extends StatelessWidget {
     );
   }
 }
+
+class BackButtonWithNavigation extends StatelessWidget {
+  final String buttonText;
+  final Widget destination;
+
+  BackButtonWithNavigation({required this.buttonText, required this.destination});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10.0),
+      child: FlatButton(
+        child: Text(
+          buttonText,
+          style: TextStyle(color: Colors.black),
+        ),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => destination));
+        },
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+    );
+  }
+}
+
+
+
+

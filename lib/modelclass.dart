@@ -13,7 +13,7 @@ class DbHelper {
   static const String Table_User = 'allCondidates';
   static const int Version = 1;
 
-  static final cId = 'id';
+  static final id = 'id';
 
   static const String dob = 'dob';
   static const String nationality = 'nationality';
@@ -55,7 +55,7 @@ class DbHelper {
     await db.execute(
         '''
        CREATE TABLE $Table_User(
-            $cId INTEGER PRIMARY KEY,
+            $id INTEGER PRIMARY KEY AUTOINCREMENT,
             $dob TEXT NOT NULL,
             $nationality TEXT NOT NULL,
             $gender TEXT NOT NULL,
@@ -83,11 +83,6 @@ class DbHelper {
 
   }
 
-  // // Future<int> saveData(UserModel user) async {
-  // //   var dbClient = await db;
-  // //   var res = await dbClient.insert(Table_User, user.toMap());
-  // //   return res;
-  // // }
 
   Future<void> insertData(DatabaseModel data) async {
     print("row1::");
@@ -95,6 +90,16 @@ class DbHelper {
     print("row:::::${data}");
     await db.insert(Table_User, data.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+  Future<int> updateData(DatabaseModel databaseModel) async {
+    Database db = await this.db;
+
+    return await db.update(
+        Table_User,
+      databaseModel.toMap(),
+      where: 'email = ?',
+      whereArgs: [databaseModel.email], // Pass the id to identify the row to update
+    );
   }
   Future<List<DatabaseModel>> fetchData() async {
     Database db = await this.db;
@@ -125,41 +130,10 @@ class DbHelper {
       );
     });
   }
-  // Future<List<Map<String, dynamic>>> query() async{
-  //   Database db = await this.db;
-  //   return await db.query(Table_User);
-  // }
-  // Future<int> deleteAllRecords() async {
-  //   var dbClient = await db;
-  //   return await dbClient.delete(Table_User);
-  // }
-  //
-  // Future<bool> getLoginUser(String emailId, String password) async {
-  //   Database db = await this.db;
-  //   var result = await db.rawQuery(
-  //       "SELECT * FROM $Table_User WHERE "
-  //           "$C_Email = '$emailId' AND "
-  //           "$C_Password = '$password'");
-  //   print("res::${result}");
-  //   // int? exists = Sqflite.firstIntValue(result);
-  //   if(result.isNotEmpty){
-  //     return true;
-  //   }else{
-  //     return false;
-  //   }
-  // }
-  //
-  // Future<int> updateUser(UserModel user) async {
-  //   var dbClient = await db;
-  //   var res = await dbClient.update(Table_User, user.toMap(),
-  //       where: '$C_FirstName = ?', whereArgs: [user.firstName]);
-  //   return res;
-  // }
-  //
-  // Future<int> deleteUser(String user_id) async {
-  //   var dbClient = await db;
-  //   var res = await dbClient
-  //       .delete(Table_User, where: '$C_FirstName = ?', whereArgs: [user_id]);
-  //   return res;
-  // }
+  Future<void> deleteData(String email) async {
+    print(" Delete::${email}");
+    final db = await this.db;
+    int deletedRows = await db.delete(Table_User, where: 'email = ?', whereArgs: [email]);
+    print('Deleted rows: $deletedRows');
+  }
 }

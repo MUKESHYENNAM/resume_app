@@ -10,7 +10,9 @@ import 'Skills_page2.dart';
 import 'modelData.dart';
 
 class PersonalInfo extends StatefulWidget {
-
+  final DatabaseModel? editingResume;
+  final bool? status;
+  PersonalInfo({ this.status, this.editingResume});
   @override
   _PersonalInfoState createState() => _PersonalInfoState();
 }
@@ -27,14 +29,29 @@ class _PersonalInfoState extends State<PersonalInfo> {
   @override
   void initState() {
     super.initState();
-
+    _CondidateName.text = widget.editingResume?.name ?? '';
+    _regEmail.text =  widget.editingResume?.email ?? '';
+    _address.text = widget.editingResume?.address ?? '';
+    _MobileNo.text = widget.editingResume?.mobileNo ?? '';
+    _linkedInUrl.text =widget.editingResume?.linkedInUrl ?? '';
+    _yourSelf.text = widget.editingResume?.yourSelf ?? '';
+  }
+  @override
+  void dispose() {
+    _CondidateName.dispose();
+    _regEmail.dispose();
+    _address.dispose();
+    _MobileNo.dispose();
+    _linkedInUrl.dispose();
+    _yourSelf.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Build Your CV '),
+        title: Text('${widget.status==true?"Edit Your CV":"Edit Build Your CV"}'),
       ),
       body: Form(
         key: _formKey,
@@ -46,7 +63,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: 20,),
-                  Text("Parsonal Info"),
+                  Text("Personal Info"),
                   getTextFormField(
                     name: "Enter Your Name",
                        controller: _CondidateName,
@@ -89,76 +106,66 @@ class _PersonalInfoState extends State<PersonalInfo> {
                   ),
                   Row(
                     children: [
-                      Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: FlatButton(
-                          child: Text(
-                            'Back',
-                            style: TextStyle(color: Colors.white),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.all(10.0),
+                          child: FlatButton(
+                            child: Text(
+                              'Next',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              print("ID::: ${widget.editingResume?.email}");
+                              if (!_formKey.currentState!.validate()) {
+                                return null;
+                              } else {
+                                // Store the data in the provider
+                                PersonalInformation personalInfo = PersonalInformation(
+                                  name: _CondidateName.text,
+                                  email: _regEmail.text,
+                                  address: _address.text,
+                                  mobileNo: _MobileNo.text,
+                                  linkedInUrl: _linkedInUrl.text,
+                                  yourSelf: _yourSelf.text,
+
+                                  progLanguage: '', // Default value for programming language
+                                  currentlyWorking: '', // Default value for currently working
+                                  skills: '', // Default value for skills
+                                  hobbies: '', // Default value for hobbies
+                                  courses: '', // Default value for courses
+
+                                  degree: '',
+                                  schoolOrCollege: '',
+                                  percentage: '',
+                                  roleTraining: '',
+                                  companyTraining: '',
+
+                                  gender: '',
+                                  nationality: '',
+                                  dob: '',
+                                  languages: '',
+                                  maritalStatus: '',
+                                );
+                                Provider.of<PersonalInfoProvider>(context, listen: false)
+                                    .updatePersonalInfo(personalInfo);
+
+                                if(widget.status==true){
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => SkillsData(editingResume: widget.editingResume, status: true,)));
+                                }else{
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => SkillsData()));
+                                }
+                              }
+
+                            },
                           ),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => PersonalInfo()));
-                          },
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: FlatButton(
-                          child: Text(
-                            'Next',
-                            style: TextStyle(color: Colors.white),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(30.0),
                           ),
-                          onPressed: () {
-                            if (!_formKey.currentState!.validate()) {
-                              return null;
-                            } else {
-                              // Store the data in the provider
-                              PersonalInformation personalInfo = PersonalInformation(
-                                name: _CondidateName.text,
-                                email: _regEmail.text,
-                                address: _address.text,
-                                mobileNo: _MobileNo.text,
-                                linkedInUrl: _linkedInUrl.text,
-                                yourSelf: _yourSelf.text,
-
-                                progLanguage: '', // Default value for programming language
-                                currentlyWorking: '', // Default value for currently working
-                                skills: '', // Default value for skills
-                                hobbies: '', // Default value for hobbies
-                                courses: '', // Default value for courses
-
-                                degree: '',
-                                schoolOrCollege: '',
-                                percentage: '',
-                                roleTraining: '',
-                                companyTraining: '',
-
-                                gender: '',
-                                nationality: '',
-                                dob: '',
-                                languages: '',
-                                maritalStatus: '',
-                              );
-                              Provider.of<PersonalInfoProvider>(context, listen: false)
-                                  .updatePersonalInfo(personalInfo);
-
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => SkillsData()));
-                            }
-                          },
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -168,9 +175,6 @@ class _PersonalInfoState extends State<PersonalInfo> {
     );
   }
 }
-
-
-
 
 
 
