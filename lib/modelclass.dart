@@ -55,7 +55,7 @@ class DbHelper {
     await db.execute(
         '''
        CREATE TABLE $Table_User(
-            $id INTEGER PRIMARY KEY AUTOINCREMENT,
+            $id INTEGER PRIMARY KEY,
             $dob TEXT NOT NULL,
             $nationality TEXT NOT NULL,
             $gender TEXT NOT NULL,
@@ -90,6 +90,10 @@ class DbHelper {
     print("row:::::${data}");
     await db.insert(Table_User, data.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+  Future<int> deleteAllRecords() async {
+    var dbClient = await db;
+    return await dbClient.delete(Table_User);
   }
   Future<int> updateData(DatabaseModel databaseModel) async {
     Database db = await this.db;

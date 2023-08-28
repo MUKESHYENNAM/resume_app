@@ -11,19 +11,19 @@ class getTextFormField extends StatelessWidget {
   TextInputType inputType;
   bool isEnable;
 
+
   getTextFormField({
-      this.controller,
-      this.hintName,
+    this.controller,
+    this.hintName,
     this.name,
-      this.icon,
-      this.isObscureText = false,
-      this.inputType = TextInputType.text,
-      this.isEnable = true});
+    this.icon,
+    this.isObscureText = false,
+    this.inputType = TextInputType.text,
+    this.isEnable = true});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -37,15 +37,22 @@ class getTextFormField extends StatelessWidget {
             keyboardType: inputType,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter $hintName';
+                return 'required $hintName';
               }
               if (hintName == "Email" && !validateEmail(value)) {
-                return 'Please Enter Valid Email';
+                return 'required  Valid Email';
               }
               if (hintName == "Address") {
-                print("len");
                 print(value.length);
                   return (value.length<=25) ?"Enter minimun 25 latters":null;
+              }
+              if (hintName == "Percentage") {
+                double percentage = double.tryParse(value) ?? -1;
+                if (percentage >= 35 && percentage <= 100) {
+                  return null;
+                } else {
+                  return "Enter a valid percentage between 35 and 100"; // Percentage is outside the valid range
+                }
               }
               if (hintName == "LandlineNo" || hintName == "MobileNo") {
                 String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
@@ -55,21 +62,38 @@ class getTextFormField extends StatelessWidget {
               return null;
             },
             decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                borderSide: BorderSide(color: Colors.transparent),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0), // Set border radius
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                borderSide: BorderSide(color: Colors.blue),
-              ),
-              prefixIcon: Icon(icon),
-              hintText: hintName,
-              labelText: hintName,
-              fillColor: Colors.white,
               filled: true,
+              fillColor: Colors.white,
+              prefixIcon: Icon(icon),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+class HeaderText extends StatelessWidget {
+  String? hintName;
+  HeaderText({
+    this.hintName,
+    });
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50.0, // Set the desired height
+      width: double.infinity, // Expand to full available width
+      decoration: BoxDecoration(
+        color: Colors.green[100],
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("${hintName}"),
         ],
       ),
     );

@@ -39,7 +39,6 @@ class _StartFileState extends State<StartFile> {
   @override
   void initState() {
     super.initState();
-    // Call fetchData and print the inserted data
     _printInsertedData();
   }
 

@@ -34,6 +34,8 @@ class _FetchedDataPageState extends State<FetchedDataPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            widget.fetchedData.length==0
+            ?Center(child: Text("No Resumes")):
             ListView.builder(
               shrinkWrap: true,
               itemCount: widget.fetchedData.length,
@@ -103,7 +105,6 @@ class _FetchedDataPageState extends State<FetchedDataPage> {
     );
   }
 }
-
 
 class SelectedResumePage extends StatelessWidget {
   final DatabaseModel selectedResume;
