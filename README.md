@@ -14,3 +14,8 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+Flutter 2.8.0 • channel stable • https://github.com/flutter/flutter.git
+Tools • Dart 2.15.0
+run: flutter pub get
+
